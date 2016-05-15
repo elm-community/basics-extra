@@ -1,0 +1,5 @@
+# Ignore build files
+/elm-stuff
+
+# Ignore backup files
+*~
