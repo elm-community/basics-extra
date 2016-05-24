@@ -17,6 +17,12 @@ type `Never`. Useful in certain situations as argument to
 [`Task.perform`](http://package.elm-lang.org/packages/elm-lang/core/latest/Task#perform),
 [`Cmd.map`](http://package.elm-lang.org/packages/elm-lang/core/latest/Platform-Cmd#map),
 [`Html.map`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-App#map).
+
+*Note:* To use this function, its argument need not be literally of type `Never`.
+It suffices if it is a fully polymorphic value. For example, this works:
+`Process.sleep >> Task.perform never (\() -> ...)`, because the output of
+[`Process.sleep`](http://package.elm-lang.org/packages/elm-lang/core/latest/Process#sleep)
+is fully polymorphic in the `x` of `Task x ()`. 
 -}
 never : Never -> a
 never n =
