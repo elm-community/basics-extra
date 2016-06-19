@@ -4,10 +4,9 @@ module Basics.Extra
         , (=>)
         )
 
-{-| Additional basic functions
+{-| Additional basic functions.
 
-@docs never
-@docs =>
+@docs never, (=>)
 -}
 
 
