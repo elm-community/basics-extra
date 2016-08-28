@@ -52,7 +52,7 @@ in CSS or Json encoders.
     (,)
 
 
-{-| Swaps the elements in a tuple.
+{-| Swaps the elements in a pair.
 
     swap ( 1, 2 ) == ( 2, 1 )
 
