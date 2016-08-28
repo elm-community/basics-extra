@@ -28,31 +28,35 @@ and
 It suffices if it is a fully polymorphic value. For example, this works:
 `Process.sleep >> Task.perform never (\() -> ...)`, because the output of
 [`Process.sleep`](http://package.elm-lang.org/packages/elm-lang/core/latest/Process#sleep)
-is fully polymorphic in the `x` of `Task x ()`. 
+is fully polymorphic in the `x` of `Task x ()`.
 -}
 never : Never -> a
 never n =
     never n
+
+
+
 -- If this function is moved to Basics, the following nicer definition
--- using the private Never constructor may be used.  This actually
+-- using the private Never constructor may be used. This actually
 -- witnesses the emptiness of Never instead of just asserting it:
 --
 -- never (Never n) =
 --     never n
 
 
-{-| A shorthand for writing 2-tuples.  Very commonly used when expressing key/value pairs
+{-| A shorthand for writing 2-tuples. Very commonly used when expressing key/value pairs
 in CSS or Json encoders.
 -}
-(=>) : a -> b -> (a, b)
-(=>) = (,)
+(=>) : a -> b -> ( a, b )
+(=>) =
+    (,)
 
 
 {-| Swaps the elements in a tuple.
 
-    swap (1, 2) == (2, 1)
+    swap ( 1, 2 ) == ( 2, 1 )
 
 -}
-swap : (a, b) -> (b, a)
-swap (a, b) = (b, a)
-
+swap : ( a, b ) -> ( b, a )
+swap ( a, b ) =
+    ( b, a )
