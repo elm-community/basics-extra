@@ -10,7 +10,10 @@ module Basics.Extra
 {-| Additional basic functions.
 
 # Tuples
-@docs (=>), swap, maxSafeInteger, minSafeInteger, isSafeInteger
+@docs (=>), swap
+
+# Numbers
+@docs maxSafeInteger, minSafeInteger, isSafeInteger
 -}
 
 
