@@ -24,6 +24,8 @@ in CSS or Json encoders.
 (=>) =
     (,)
 
+infixr 8 =>
+
 
 {-| Swaps the elements in a pair.
 
