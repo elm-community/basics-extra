@@ -43,7 +43,7 @@ larger than that and behaviour becomes mathematically unsound.
 -}
 maxSafeInteger : number
 maxSafeInteger =
-    9007199254740991
+    2 ^ 53 - 1
 
 
 {-| The minimum _safe_ value for an integer, defined as `-(2^53 - 1)`. Anything
@@ -54,7 +54,7 @@ smaller than that, and behaviour becomes mathematically unsound.
 -}
 minSafeInteger : number
 minSafeInteger =
-    -9007199254740991
+    - maxSafeInteger
 
 
 {-| Checks if a given integer is within the safe range, meaning it is between
