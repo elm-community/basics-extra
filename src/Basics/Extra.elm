@@ -54,7 +54,7 @@ smaller than that, and behaviour becomes mathematically unsound.
 -}
 minSafeInteger : number
 minSafeInteger =
-    - maxSafeInteger
+    -maxSafeInteger
 
 
 {-| Checks if a given integer is within the safe range, meaning it is between
