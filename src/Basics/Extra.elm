@@ -5,6 +5,9 @@ module Basics.Extra
         , maxSafeInteger
         , minSafeInteger
         , isSafeInteger
+        , inDegrees
+        , inRadians
+        , inTurns
         )
 
 {-| Additional basic functions.
@@ -14,6 +17,9 @@ module Basics.Extra
 
 # Numbers
 @docs maxSafeInteger, minSafeInteger, isSafeInteger
+
+# Angle Conversions
+@docs inDegrees, inRadians, inTurns
 -}
 
 
@@ -67,3 +73,43 @@ minSafeInteger =
 isSafeInteger : Int -> Bool
 isSafeInteger number =
     minSafeInteger <= number && maxSafeInteger >= number
+
+
+degreesPerRadian : Float
+degreesPerRadian =
+    1 / degrees 1
+
+
+{-| Convert standard Elm angles (radians) to degrees.
+
+    inDegrees (turns 2) == 720
+    inDegrees pi == 180
+-}
+inDegrees : Float -> Float
+inDegrees angle =
+    angle * degreesPerRadian
+
+
+{-| Convert standard Elm angles (radians) to radians.
+
+    inRadians (degrees 90) == pi / 2
+    inRadians (turns 1) == 2 * pi
+-}
+inRadians : Float -> Float
+inRadians =
+    identity
+
+
+turnsPerRadian : Float
+turnsPerRadian =
+    1 / turns 1
+
+
+{-| Convert standard Elm angles (radians) to turns. One turn is equal to 360°.
+
+    inTurns (degrees 180) == 0.5
+    inTurns (3 * pi) = 1.5
+-}
+inTurns : Float -> Float
+inTurns angle =
+    angle * turnsPerRadian
