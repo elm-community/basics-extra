@@ -8,6 +8,7 @@ module Basics.Extra
         , inDegrees
         , inRadians
         , inTurns
+        , fmod
         )
 
 {-| Additional basic functions.
@@ -17,6 +18,9 @@ module Basics.Extra
 
 # Numbers
 @docs maxSafeInteger, minSafeInteger, isSafeInteger
+
+# Arithmetics
+@docs fmod
 
 # Angle Conversions
 @docs inDegrees, inRadians, inTurns
@@ -73,6 +77,16 @@ minSafeInteger =
 isSafeInteger : Int -> Bool
 isSafeInteger number =
     minSafeInteger <= number && maxSafeInteger >= number
+
+
+{-| Performs modular arithmetics involving floating point numbers.
+-}
+fmod : Float -> Int -> Float
+fmod f n =
+    let
+        integer = floor f
+    in
+        toFloat (integer % n) + f - toFloat integer
 
 
 degreesPerRadian : Float
