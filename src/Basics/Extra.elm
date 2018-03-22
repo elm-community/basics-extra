@@ -81,12 +81,9 @@ isSafeInteger number =
 
 {-| Performs modular arithmetics involving floating point numbers.
 -}
-fmod : Float -> Int -> Float
-fmod f n =
-    let
-        integer = floor f
-    in
-        toFloat (integer % n) + f - toFloat integer
+fmod : Float -> Float -> Float
+fmod x m =
+    x - m * toFloat (floor (x / m))
 
 
 degreesPerRadian : Float
