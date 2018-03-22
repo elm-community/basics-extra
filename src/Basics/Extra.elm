@@ -1,29 +1,38 @@
 module Basics.Extra
     exposing
         ( (=>)
-        , swap
-        , maxSafeInteger
-        , minSafeInteger
-        , isSafeInteger
+        , fmod
         , inDegrees
         , inRadians
         , inTurns
-        , fmod
+        , isSafeInteger
+        , maxSafeInteger
+        , minSafeInteger
+        , swap
         )
 
 {-| Additional basic functions.
 
+
 # Tuples
+
 @docs (=>), swap
 
+
 # Numbers
+
 @docs maxSafeInteger, minSafeInteger, isSafeInteger
 
+
 # Arithmetics
+
 @docs fmod
 
+
 # Angle Conversions
+
 @docs inDegrees, inRadians, inTurns
+
 -}
 
 
@@ -33,7 +42,6 @@ in CSS or Json encoders.
 (=>) : a -> b -> ( a, b )
 (=>) =
     (,)
-
 infixr 8 =>
 
 
@@ -52,6 +60,7 @@ larger than that and behaviour becomes mathematically unsound.
 
     (maxSafeInteger + 1) == (maxSafeInteger + 2)
         == True
+
 -}
 maxSafeInteger : number
 maxSafeInteger =
@@ -63,6 +72,7 @@ smaller than that, and behaviour becomes mathematically unsound.
 
     (minSafeInteger - 1) == (minSafeInteger - 2)
         == True
+
 -}
 minSafeInteger : number
 minSafeInteger =
@@ -75,13 +85,29 @@ minSafeInteger =
     isSafeInteger 5 == True
     isSafeInteger maxSafeInteger == True
     isSafeInteger (maxSafeInteger + 1) == False
+
 -}
 isSafeInteger : Int -> Bool
 isSafeInteger number =
     minSafeInteger <= number && maxSafeInteger >= number
 
 
-{-| Performs modular arithmetics involving floating point numbers.
+{-| Perform [modular arithmetic](https://en.wikipedia.org/wiki/Modular_arithmetic)
+involving floating point numbers.
+
+The sign of the result is the same as the sign of the modulus
+(the `m` in `fmod x m`).
+
+    fmod 5 2 == 1
+    fmod 5 2.5 == 0
+    fmod 4.5 2 == 0.5
+
+    fmod -5 2 == 1
+    fmod -4.5 2 == 1.5
+
+    fmod 5 -2 == -1
+    fmod 4.5 -2 == -1.5
+
 -}
 fmod : Float -> Float -> Float
 fmod x m =
@@ -97,6 +123,7 @@ degreesPerRadian =
 
     inDegrees (turns 2) == 720
     inDegrees pi == 180
+
 -}
 inDegrees : Float -> Float
 inDegrees angle =
@@ -107,6 +134,7 @@ inDegrees angle =
 
     inRadians (degrees 90) == pi / 2
     inRadians (turns 1) == 2 * pi
+
 -}
 inRadians : Float -> Float
 inRadians =
@@ -122,6 +150,7 @@ turnsPerRadian =
 
     inTurns (degrees 180) == 0.5
     inTurns (3 * pi) = 1.5
+
 -}
 inTurns : Float -> Float
 inTurns angle =
