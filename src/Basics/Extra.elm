@@ -1,22 +1,16 @@
-module Basics.Extra
-    exposing
-        ( (=>)
-        , fmod
-        , inDegrees
-        , inRadians
-        , inTurns
-        , isSafeInteger
-        , maxSafeInteger
-        , minSafeInteger
-        , swap
-        )
+module Basics.Extra exposing
+    ( swap
+    , maxSafeInteger, minSafeInteger, isSafeInteger
+    , fractionalModBy
+    , inDegrees, inRadians, inTurns
+    )
 
 {-| Additional basic functions.
 
 
 # Tuples
 
-@docs (=>), swap
+@docs swap
 
 
 # Numbers
@@ -24,25 +18,16 @@ module Basics.Extra
 @docs maxSafeInteger, minSafeInteger, isSafeInteger
 
 
-# Arithmetics
+# Fancier Math
 
-@docs fmod
+@docs fractionalModBy
 
 
-# Angle Conversions
+# Angles
 
 @docs inDegrees, inRadians, inTurns
 
 -}
-
-
-{-| A shorthand for writing 2-tuples. Very commonly used when expressing key/value pairs
-in CSS or Json encoders.
--}
-(=>) : a -> b -> ( a, b )
-(=>) =
-    (,)
-infixr 8 =>
 
 
 {-| Swaps the elements in a pair.
@@ -58,7 +43,8 @@ swap ( a, b ) =
 {-| The maximum _safe_ value for an integer, defined as `2^53 - 1`. Anything
 larger than that and behaviour becomes mathematically unsound.
 
-    (maxSafeInteger + 1) == (maxSafeInteger + 2)
+    (maxSafeInteger + 1)
+        == (maxSafeInteger + 2)
         == True
 
 -}
@@ -70,7 +56,8 @@ maxSafeInteger =
 {-| The minimum _safe_ value for an integer, defined as `-(2^53 - 1)`. Anything
 smaller than that, and behaviour becomes mathematically unsound.
 
-    (minSafeInteger - 1) == (minSafeInteger - 2)
+    (minSafeInteger - 1)
+        == (minSafeInteger - 2)
         == True
 
 -}
@@ -83,7 +70,9 @@ minSafeInteger =
 `-(2^53 - 1)` and `2^53 - 1`.
 
     isSafeInteger 5 == True
+
     isSafeInteger maxSafeInteger == True
+
     isSafeInteger (maxSafeInteger + 1) == False
 
 -}
@@ -95,55 +84,45 @@ isSafeInteger number =
 {-| Perform [modular arithmetic](https://en.wikipedia.org/wiki/Modular_arithmetic)
 involving floating point numbers.
 
-The sign of the result is the same as the sign of the modulus
-(the `m` in `fmod x m`).
+The sign of the result is the same as the sign of the `modulus`
+in `fractionalModBy modulus x`.
 
-    fmod 5 2 == 1
-    fmod 5 2.5 == 0
-    fmod 4.5 2 == 0.5
+    fractionalModBy 2.5 5 == 0
 
-    fmod -5 2 == 1
-    fmod -4.5 2 == 1.5
+    fractionalModBy 2 4.5 == 0.5
 
-    fmod 5 -2 == -1
-    fmod 4.5 -2 == -1.5
+    fractionalModBy 2 -4.5 == 1.5
+
+    fractionalModBy -2 4.5 == -1.5
 
 -}
-fmod : Float -> Float -> Float
-fmod x m =
-    x - m * toFloat (floor (x / m))
-
-
-degreesPerRadian : Float
-degreesPerRadian =
-    1 / degrees 1
+fractionalModBy : Float -> Float -> Float
+fractionalModBy modulus x =
+    x - modulus * toFloat (floor (x / modulus))
 
 
 {-| Convert standard Elm angles (radians) to degrees.
 
     inDegrees (turns 2) == 720
+
     inDegrees pi == 180
 
 -}
 inDegrees : Float -> Float
 inDegrees angle =
-    angle * degreesPerRadian
+    angle / degrees 1
 
 
 {-| Convert standard Elm angles (radians) to radians.
 
     inRadians (degrees 90) == pi / 2
+
     inRadians (turns 1) == 2 * pi
 
 -}
 inRadians : Float -> Float
 inRadians =
     identity
-
-
-turnsPerRadian : Float
-turnsPerRadian =
-    1 / turns 1
 
 
 {-| Convert standard Elm angles (radians) to turns. One turn is equal to 360°.
@@ -154,4 +133,4 @@ turnsPerRadian =
 -}
 inTurns : Float -> Float
 inTurns angle =
-    angle * turnsPerRadian
+    angle / turns 1
