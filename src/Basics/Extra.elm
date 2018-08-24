@@ -3,6 +3,7 @@ module Basics.Extra exposing
     , maxSafeInteger, minSafeInteger, isSafeInteger
     , fractionalModBy
     , inDegrees, inRadians, inTurns
+    , flip, curry, uncurry
     )
 
 {-| Additional basic functions.
@@ -26,6 +27,11 @@ module Basics.Extra exposing
 # Angles
 
 @docs inDegrees, inRadians, inTurns
+
+
+# Higher-Order Helpers
+
+@docs flip, curry, uncurry
 
 -}
 
@@ -134,3 +140,26 @@ inRadians =
 inTurns : Float -> Float
 inTurns angle =
     angle / turns 1
+
+
+{-| Flip the order of the first two arguments to a function.
+-}
+flip : (a -> b -> c) -> (b -> a -> c)
+flip f b a =
+    f a b
+
+
+{-| Change how arguments are passed to a function.
+This splits paired arguments into two separate arguments.
+-}
+curry : (( a, b ) -> c) -> a -> b -> c
+curry f a b =
+    f ( a, b )
+
+
+{-| Change how arguments are passed to a function.
+This combines two arguments into a single pair.
+-}
+uncurry : (a -> b -> c) -> ( a, b ) -> c
+uncurry f ( a, b ) =
+    f a b
