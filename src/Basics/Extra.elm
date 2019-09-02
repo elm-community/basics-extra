@@ -1,7 +1,7 @@
 module Basics.Extra exposing
     ( swap
     , maxSafeInteger, minSafeInteger, isSafeInteger
-    , fractionalModBy
+    , fractionalModBy, safeModBy
     , inDegrees, inRadians, inTurns
     , flip, curry, uncurry
     )
@@ -21,7 +21,7 @@ module Basics.Extra exposing
 
 # Fancier Math
 
-@docs fractionalModBy
+@docs fractionalModBy, safeModBy
 
 
 # Angles
@@ -105,6 +105,28 @@ in `fractionalModBy modulus x`.
 fractionalModBy : Float -> Float -> Float
 fractionalModBy modulus x =
     x - modulus * toFloat (floor (x / modulus))
+
+
+{-| Perform [modular arithmetic](https://en.wikipedia.org/wiki/Modular_arithmetic)
+that doesn't crash the app if the `b` argument in `a % b` is zero.
+
+We instead return [zero](https://www.hillelwayne.com/post/divide-by-zero/) as a default.
+
+    safeModBy 2 4 == 0
+
+    safeModBy 2 5 == 1
+
+    -- the interesting part
+    safeModBy 0 4 == 0
+
+-}
+safeModBy : Int -> Int -> Int
+safeModBy modulus x =
+    if modulus == 0 then
+        0
+
+    else
+        modBy modulus x
 
 
 {-| Convert standard Elm angles (radians) to degrees.
