@@ -190,40 +190,38 @@ safeRemainderBy divisor x =
         Just <| remainderBy divisor x
 
 
-{-| Floating-point division (like Elm's `/` operator), [returning zero](https://www.hillelwayne.com/post/divide-by-zero/)
-if the divisor is zero.
+{-| Like Elm's `/` operator but doesn't crash the app if the `b` argument in `a / b` is zero (we instead return `Nothing` in that case).
 
-    safeDivide 5 2 == 2.5
+    safeDivide 5 2 == Just 2.5
 
     -- the interesting part
-    safeDivide 5 0 == 0
+    safeDivide 5 0 == Nothing
 
 -}
-safeDivide : Float -> Float -> Float
+safeDivide : Float -> Float -> Maybe Float
 safeDivide x y =
     if y == 0 then
-        0
+        Nothing
 
     else
-        x / y
+        Just (x / y)
 
 
-{-| Integer division (like Elm's `//` operator), [returning zero](https://www.hillelwayne.com/post/divide-by-zero/)
-if the divisor is zero.
+{-| Like Elm's `//` operator but doesn't crash the app if the `b` argument in `a // b` is zero (we instead return `Nothing` in that case).
 
-    safeIntegerDivide 5 2 == 2
+    safeIntegerDivide 5 2 == Just 2
 
     -- the interesting part
-    safeIntegerDivide 5 0 == 0
+    safeIntegerDivide 5 0 == Nothing
 
 -}
-safeIntegerDivide : Int -> Int -> Int
+safeIntegerDivide : Int -> Int -> Maybe Int
 safeIntegerDivide x y =
     if y == 0 then
-        0
+        Nothing
 
     else
-        x // y
+        Just (x // y)
 
 
 {-| Convert standard Elm angles (radians) to degrees.
