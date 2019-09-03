@@ -1,9 +1,10 @@
 module Basics.Extra exposing
     ( swap
     , maxSafeInteger, minSafeInteger, isSafeInteger
-    , fractionalModBy, safeModBy, safeRemainderBy, safeDivide, safeIntegerDivide
+    , safeModBy, safeRemainderBy, fractionalModBy
     , inDegrees, inRadians, inTurns
     , flip, curry, uncurry
+    , safeDivide, safeIntegerDivide
     )
 
 {-| Additional basic functions.
@@ -19,9 +20,14 @@ module Basics.Extra exposing
 @docs maxSafeInteger, minSafeInteger, isSafeInteger
 
 
+# Math
+
+safeDivide, safeIntegerDivide
+
+
 # Fancier Math
 
-@docs fractionalModBy, safeModBy, safeRemainderBy, safeDivide, safeIntegerDivide
+@docs safeModBy, safeRemainderBy, fractionalModBy
 
 
 # Angles
@@ -87,24 +93,40 @@ isSafeInteger number =
     minSafeInteger <= number && maxSafeInteger >= number
 
 
-{-| Perform [modular arithmetic](https://en.wikipedia.org/wiki/Modular_arithmetic)
-involving floating point numbers.
+{-| Perform floating-point division (like Elm's `/` operator) that will never
+crash the app. If the `y` argument in `safeDivide x y` is zero, we return `Nothing`.
 
-The sign of the result is the same as the sign of the `modulus`
-in `fractionalModBy modulus x`.
+    safeDivide 5 2 == Just 2.5
 
-    fractionalModBy 2.5 5 == 0
-
-    fractionalModBy 2 4.5 == 0.5
-
-    fractionalModBy 2 -4.5 == 1.5
-
-    fractionalModBy -2 4.5 == -1.5
+    -- the interesting part
+    safeDivide 5 0 == Nothing
 
 -}
-fractionalModBy : Float -> Float -> Float
-fractionalModBy modulus x =
-    x - modulus * toFloat (floor (x / modulus))
+safeDivide : Float -> Float -> Maybe Float
+safeDivide x y =
+    if y == 0 then
+        Nothing
+
+    else
+        Just (x / y)
+
+
+{-| Perform integer division (like Elm's `//` operator) that will never crash
+the app. If the `y` argument in `safeIntegerDivide x y` is zero, we return `Nothing`.
+
+    safeIntegerDivide 5 2 == Just 2
+
+    -- the interesting part
+    safeIntegerDivide 5 0 == Nothing
+
+-}
+safeIntegerDivide : Int -> Int -> Maybe Int
+safeIntegerDivide x y =
+    if y == 0 then
+        Nothing
+
+    else
+        Just (x // y)
 
 
 {-| Perform [modular arithmetic][ma] that will never crash the app. If the `modulus`
@@ -160,40 +182,24 @@ safeRemainderBy divisor x =
         Just (remainderBy divisor x)
 
 
-{-| Perform floating-point division (like Elm's `/` operator) that will never
-crash the app. If the `y` argument in `safeDivide x y` is zero, we return `Nothing`.
+{-| Perform [modular arithmetic](https://en.wikipedia.org/wiki/Modular_arithmetic)
+involving floating point numbers.
 
-    safeDivide 5 2 == Just 2.5
+The sign of the result is the same as the sign of the `modulus`
+in `fractionalModBy modulus x`.
 
-    -- the interesting part
-    safeDivide 5 0 == Nothing
+    fractionalModBy 2.5 5 == 0
 
--}
-safeDivide : Float -> Float -> Maybe Float
-safeDivide x y =
-    if y == 0 then
-        Nothing
+    fractionalModBy 2 4.5 == 0.5
 
-    else
-        Just (x / y)
+    fractionalModBy 2 -4.5 == 1.5
 
-
-{-| Perform integer division (like Elm's `//` operator) that will never crash
-the app. If the `y` argument in `safeIntegerDivide x y` is zero, we return `Nothing`.
-
-    safeIntegerDivide 5 2 == Just 2
-
-    -- the interesting part
-    safeIntegerDivide 5 0 == Nothing
+    fractionalModBy -2 4.5 == -1.5
 
 -}
-safeIntegerDivide : Int -> Int -> Maybe Int
-safeIntegerDivide x y =
-    if y == 0 then
-        Nothing
-
-    else
-        Just (x // y)
+fractionalModBy : Float -> Float -> Float
+fractionalModBy modulus x =
+    x - modulus * toFloat (floor (x / modulus))
 
 
 {-| Convert standard Elm angles (radians) to degrees.
