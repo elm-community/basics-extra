@@ -1,9 +1,10 @@
 module Basics.Extra exposing
     ( swap
     , maxSafeInteger, minSafeInteger, isSafeInteger
-    , fractionalModBy
+    , safeModBy, safeRemainderBy, fractionalModBy
     , inDegrees, inRadians, inTurns
     , flip, curry, uncurry
+    , safeDivide, safeIntegerDivide
     )
 
 {-| Additional basic functions.
@@ -19,9 +20,14 @@ module Basics.Extra exposing
 @docs maxSafeInteger, minSafeInteger, isSafeInteger
 
 
+# Math
+
+safeDivide, safeIntegerDivide
+
+
 # Fancier Math
 
-@docs fractionalModBy
+@docs safeModBy, safeRemainderBy, fractionalModBy
 
 
 # Angles
@@ -85,6 +91,95 @@ minSafeInteger =
 isSafeInteger : Int -> Bool
 isSafeInteger number =
     minSafeInteger <= number && maxSafeInteger >= number
+
+
+{-| Perform floating-point division (like Elm's `/` operator) that will never
+crash the app. If the `y` argument in `safeDivide x y` is zero, we return `Nothing`.
+
+    safeDivide 5 2 == Just 2.5
+
+    -- the interesting part
+    safeDivide 5 0 == Nothing
+
+-}
+safeDivide : Float -> Float -> Maybe Float
+safeDivide x y =
+    if y == 0 then
+        Nothing
+
+    else
+        Just (x / y)
+
+
+{-| Perform integer division (like Elm's `//` operator) that will never crash
+the app. If the `y` argument in `safeIntegerDivide x y` is zero, we return `Nothing`.
+
+    safeIntegerDivide 5 2 == Just 2
+
+    -- the interesting part
+    safeIntegerDivide 5 0 == Nothing
+
+-}
+safeIntegerDivide : Int -> Int -> Maybe Int
+safeIntegerDivide x y =
+    if y == 0 then
+        Nothing
+
+    else
+        Just (x // y)
+
+
+{-| Perform [modular arithmetic][ma] that will never crash the app. If the `modulus`
+argument in `safeModBy modulus x` is zero, we return `Nothing`.
+
+    safeModBy 2 4 == Just 0
+
+    safeModBy 2 5 == Just 1
+
+    -- the interesting part
+    safeModBy 0 4 == Nothing
+
+Use [`safeRemainderBy`](#safeRemainderBy) for a different treatment of negative
+numbers, or read Daan Leijen’s [Division and Modulus for Computer Scientists][dm]
+for more information.
+
+[ma]: https://en.wikipedia.org/wiki/Modular_arithmetic
+[dm]: https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/divmodnote-letter.pdf
+
+-}
+safeModBy : Int -> Int -> Maybe Int
+safeModBy modulus x =
+    if modulus == 0 then
+        Nothing
+
+    else
+        Just (modBy modulus x)
+
+
+{-| Get the remainder after division in a way that will never crash the app. If
+the `divisor` argument in `safeRemainderBy divisor x` is zero, we return `Nothing`.
+
+    safeRemainderBy 2 4 == Just 0
+
+    safeRemainderBy 2 5 == Just 1
+
+    -- the interesting part
+    safeRemainderBy 0 4 == Nothing
+
+Use [`safeModBy`](#safeModBy) for a different treatment of negative
+numbers, or read Daan Leijen’s [Division and Modulus for Computer Scientists][dm]
+for more information.
+
+[dm]: https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/divmodnote-letter.pdf
+
+-}
+safeRemainderBy : Int -> Int -> Maybe Int
+safeRemainderBy divisor x =
+    if divisor == 0 then
+        Nothing
+
+    else
+        Just (remainderBy divisor x)
 
 
 {-| Perform [modular arithmetic](https://en.wikipedia.org/wiki/Modular_arithmetic)
