@@ -107,8 +107,8 @@ fractionalModBy modulus x =
     x - modulus * toFloat (floor (x / modulus))
 
 
-{-| Perform [modular arithmetic](https://en.wikipedia.org/wiki/Modular_arithmetic)
-that doesn't crash the app if the `b` argument in `a % b` is zero. We instead return `Nothing`.
+{-| Perform [modular arithmetic][ma] that will never crash the app. If the `modulus`
+argument in `safeModBy modulus x` is zero, we return `Nothing`.
 
     safeModBy 2 4 == Just 0
 
@@ -117,25 +117,11 @@ that doesn't crash the app if the `b` argument in `a % b` is zero. We instead re
     -- the interesting part
     safeModBy 0 4 == Nothing
 
-In many cases it makes sense to [return zero](https://www.hillelwayne.com/post/divide-by-zero/) as a default.
-You can do that by defining your own version - might be nicer to use because of returning straight `Int`!
-
-    modBy_ : Int -> Int -> Int
-    modBy_ modulus x =
-        safeModBy modulus x
-            |> Maybe.withDefault 0
-
-    modBy_ 2 4 == 0
-
-    modBy_ 2 5 == 1
-
-    -- the interesting part
-    modBy_ 0 4 == 0
-
 Use [`safeRemainderBy`](#safeRemainderBy) for a different treatment of negative
 numbers, or read Daan Leijen’s [Division and Modulus for Computer Scientists][dm]
 for more information.
 
+[ma]: https://en.wikipedia.org/wiki/Modular_arithmetic
 [dm]: https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/divmodnote-letter.pdf
 
 -}
@@ -145,12 +131,11 @@ safeModBy modulus x =
         Nothing
 
     else
-        Just <| modBy modulus x
+        Just (modBy modulus x)
 
 
-{-| Get the remainder after division.
-
-This version doesn't crash the app if the `b` argument in `a % b` is zero. We instead return `Nothing`.
+{-| Get the remainder after division in a way that will never crash the app. If
+the `divisor` argument in `safeRemainderBy divisor x` is zero, we return `Nothing`.
 
     safeRemainderBy 2 4 == Just 0
 
@@ -158,21 +143,6 @@ This version doesn't crash the app if the `b` argument in `a % b` is zero. We in
 
     -- the interesting part
     safeRemainderBy 0 4 == Nothing
-
-In many cases it makes sense to [return zero](https://www.hillelwayne.com/post/divide-by-zero/) as a default.
-You can do that by defining your own version - might be nicer to use because of returning straight `Int`!
-
-    remainderBy_ : Int -> Int -> Int
-    remainderBy_ divisor x =
-        safeRemainderBy divisor x
-            |> Maybe.withDefault 0
-
-    remainderBy_ 2 4 == 0
-
-    remainderBy_ 2 5 == 1
-
-    -- the interesting part
-    remainderBy_ 0 4 == 0
 
 Use [`safeModBy`](#safeModBy) for a different treatment of negative
 numbers, or read Daan Leijen’s [Division and Modulus for Computer Scientists][dm]
@@ -187,10 +157,11 @@ safeRemainderBy divisor x =
         Nothing
 
     else
-        Just <| remainderBy divisor x
+        Just (remainderBy divisor x)
 
 
-{-| Like Elm's `/` operator but doesn't crash the app if the `b` argument in `a / b` is zero (we instead return `Nothing` in that case).
+{-| Perform floating-point division (like Elm's `/` operator) that will never
+crash the app. If the `y` argument in `safeDivide x y` is zero, we return `Nothing`.
 
     safeDivide 5 2 == Just 2.5
 
@@ -207,7 +178,8 @@ safeDivide x y =
         Just (x / y)
 
 
-{-| Like Elm's `//` operator but doesn't crash the app if the `b` argument in `a // b` is zero (we instead return `Nothing` in that case).
+{-| Perform integer division (like Elm's `//` operator) that will never crash
+the app. If the `y` argument in `safeIntegerDivide x y` is zero, we return `Nothing`.
 
     safeIntegerDivide 5 2 == Just 2
 
