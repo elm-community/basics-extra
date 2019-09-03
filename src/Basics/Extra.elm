@@ -108,7 +108,7 @@ fractionalModBy modulus x =
 
 
 {-| Perform [modular arithmetic](https://en.wikipedia.org/wiki/Modular_arithmetic)
-that doesn't crash the app if the `b` argument in `a % b` is zero. We instead return Nothing.
+that doesn't crash the app if the `b` argument in `a % b` is zero. We instead return `Nothing`.
 
     safeModBy 2 4 == Just 0
 
@@ -150,7 +150,7 @@ safeModBy modulus x =
 
 {-| Get the remainder after division.
 
-This version doesn't crash the app if the `b` argument in `a % b` is zero. We instead return Nothing.
+This version doesn't crash the app if the `b` argument in `a % b` is zero. We instead return `Nothing`.
 
     safeRemainderBy 2 4 == Just 0
 
@@ -190,7 +190,7 @@ safeRemainderBy divisor x =
         Just <| remainderBy divisor x
 
 
-{-| Floating-point division (like `/`), [returning zero](https://www.hillelwayne.com/post/divide-by-zero/)
+{-| Floating-point division (like Elm's `/` operator), [returning zero](https://www.hillelwayne.com/post/divide-by-zero/)
 if the divisor is zero.
 
     safeDivide 5 2 == 2.5
@@ -208,7 +208,7 @@ safeDivide x y =
         x / y
 
 
-{-| Integer division (like `//`), [returning zero](https://www.hillelwayne.com/post/divide-by-zero/)
+{-| Integer division (like Elm's `//` operator), [returning zero](https://www.hillelwayne.com/post/divide-by-zero/)
 if the divisor is zero.
 
     safeIntegerDivide 5 2 == 2
