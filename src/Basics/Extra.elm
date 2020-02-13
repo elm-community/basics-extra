@@ -262,9 +262,9 @@ uncurry f ( a, b ) =
 
 {-| Defines a lower bound for a variable.
 
-    -42 |> clampMinimum 0 == 0
+    (-42 |> clampMinimum 0) == 0
 
-    42 |> clampMinimum 0 == 42
+    (42 |> clampMinimum 0) == 42
 
 -}
 clampMinimum : comparable -> comparable -> comparable
@@ -274,12 +274,9 @@ clampMinimum =
 
 {-| Defines an upper bound for a variable.
 
-    42
-        |> clampMaximum 0
-        == 0
-        - 42
-        |> clampMaximum 0
-        == -42
+    (42 |> clampMaximum 0) == 0
+
+    (-42 |> clampMaximum 0) == -42
 
 -}
 clampMaximum : comparable -> comparable -> comparable
