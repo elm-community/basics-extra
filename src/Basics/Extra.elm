@@ -1,10 +1,10 @@
 module Basics.Extra exposing
     ( swap
     , maxSafeInteger, minSafeInteger, isSafeInteger
-    , safeModBy, safeRemainderBy, fractionalModBy
+    , safeDivide, safeIntegerDivide
+    , safeModBy, safeRemainderBy, fractionalModBy, clampMaximum, clampMinimum
     , inDegrees, inRadians, inTurns
     , flip, curry, uncurry
-    , safeDivide, safeIntegerDivide
     )
 
 {-| Additional basic functions.
@@ -22,12 +22,12 @@ module Basics.Extra exposing
 
 # Math
 
-safeDivide, safeIntegerDivide
+@docs safeDivide, safeIntegerDivide
 
 
 # Fancier Math
 
-@docs safeModBy, safeRemainderBy, fractionalModBy
+@docs safeModBy, safeRemainderBy, fractionalModBy, clampMaximum, clampMinimum
 
 
 # Angles
@@ -258,3 +258,30 @@ This combines two arguments into a single pair.
 uncurry : (a -> b -> c) -> ( a, b ) -> c
 uncurry f ( a, b ) =
     f a b
+
+
+{-| Defines a lower bound for a variable.
+
+    -42 |> clampMinimum 0 == 0
+
+    42 |> clampMinimum 0 == 42
+
+-}
+clampMinimum : comparable -> comparable -> comparable
+clampMinimum =
+    max
+
+
+{-| Defines an upper bound for a variable.
+
+    42
+        |> clampMaximum 0
+        == 0
+        - 42
+        |> clampMaximum 0
+        == -42
+
+-}
+clampMaximum : comparable -> comparable -> comparable
+clampMaximum =
+    min
