@@ -44,7 +44,7 @@ module Basics.Extra exposing
 
 {-| Swaps the elements in a pair.
 
-    swap ( 1, 2 ) == ( 2, 1 )
+    swap ( 1, 2 ) --> ( 2, 1 )
 
 -}
 swap : ( a, b ) -> ( b, a )
@@ -55,9 +55,7 @@ swap ( a, b ) =
 {-| The maximum _safe_ value for an integer, defined as `2^53 - 1`. Anything
 larger than that and behaviour becomes mathematically unsound.
 
-    (maxSafeInteger + 1)
-        == (maxSafeInteger + 2)
-        == True
+    maxSafeInteger + 1 --> maxSafeInteger + 2
 
 -}
 maxSafeInteger : number
@@ -68,9 +66,7 @@ maxSafeInteger =
 {-| The minimum _safe_ value for an integer, defined as `-(2^53 - 1)`. Anything
 smaller than that, and behaviour becomes mathematically unsound.
 
-    (minSafeInteger - 1)
-        == (minSafeInteger - 2)
-        == True
+    minSafeInteger - 1 --> minSafeInteger - 2
 
 -}
 minSafeInteger : number
@@ -81,11 +77,11 @@ minSafeInteger =
 {-| Checks if a given integer is within the safe range, meaning it is between
 `-(2^53 - 1)` and `2^53 - 1`.
 
-    isSafeInteger 5 == True
+    isSafeInteger 5 --> True
 
-    isSafeInteger maxSafeInteger == True
+    isSafeInteger maxSafeInteger --> True
 
-    isSafeInteger (maxSafeInteger + 1) == False
+    isSafeInteger (maxSafeInteger + 1) --> False
 
 -}
 isSafeInteger : Int -> Bool
@@ -96,10 +92,10 @@ isSafeInteger number =
 {-| Perform floating-point division (like Elm's `/` operator) that will never
 crash the app. If the `y` argument in `safeDivide x y` is zero, we return `Nothing`.
 
-    safeDivide 5 2 == Just 2.5
+    safeDivide 5 2 --> Just 2.5
 
     -- the interesting part
-    safeDivide 5 0 == Nothing
+    safeDivide 5 0 --> Nothing
 
 -}
 safeDivide : Float -> Float -> Maybe Float
@@ -114,10 +110,10 @@ safeDivide x y =
 {-| Perform integer division (like Elm's `//` operator) that will never crash
 the app. If the `y` argument in `safeIntegerDivide x y` is zero, we return `Nothing`.
 
-    safeIntegerDivide 5 2 == Just 2
+    safeIntegerDivide 5 2 --> Just 2
 
     -- the interesting part
-    safeIntegerDivide 5 0 == Nothing
+    safeIntegerDivide 5 0 --> Nothing
 
 -}
 safeIntegerDivide : Int -> Int -> Maybe Int
@@ -132,12 +128,12 @@ safeIntegerDivide x y =
 {-| Perform [modular arithmetic][ma] that will never crash the app. If the `modulus`
 argument in `safeModBy modulus x` is zero, we return `Nothing`.
 
-    safeModBy 2 4 == Just 0
+    safeModBy 2 4 --> Just 0
 
-    safeModBy 2 5 == Just 1
+    safeModBy 2 5 --> Just 1
 
     -- the interesting part
-    safeModBy 0 4 == Nothing
+    safeModBy 0 4 --> Nothing
 
 Use [`safeRemainderBy`](#safeRemainderBy) for a different treatment of negative
 numbers, or read Daan Leijen’s [Division and Modulus for Computer Scientists][dm]
@@ -159,12 +155,12 @@ safeModBy modulus x =
 {-| Get the remainder after division in a way that will never crash the app. If
 the `divisor` argument in `safeRemainderBy divisor x` is zero, we return `Nothing`.
 
-    safeRemainderBy 2 4 == Just 0
+    safeRemainderBy 2 4 --> Just 0
 
-    safeRemainderBy 2 5 == Just 1
+    safeRemainderBy 2 5 --> Just 1
 
     -- the interesting part
-    safeRemainderBy 0 4 == Nothing
+    safeRemainderBy 0 4 --> Nothing
 
 Use [`safeModBy`](#safeModBy) for a different treatment of negative
 numbers, or read Daan Leijen’s [Division and Modulus for Computer Scientists][dm]
@@ -188,7 +184,7 @@ involving floating point numbers.
 The sign of the result is the same as the sign of the `modulus`
 in `fractionalModBy modulus x`.
 
-    fractionalModBy 2.5 5 == 0
+    fractionalModBy 2.5 5 --> 0
 
     fractionalModBy 2 4.5 == 0.5
 
@@ -204,9 +200,9 @@ fractionalModBy modulus x =
 
 {-| Convert standard Elm angles (radians) to degrees.
 
-    inDegrees (turns 2) == 720
+    inDegrees (turns 2) --> 720
 
-    inDegrees pi == 180
+    inDegrees pi --> 180
 
 -}
 inDegrees : Float -> Float
@@ -229,7 +225,8 @@ inRadians =
 {-| Convert standard Elm angles (radians) to turns. One turn is equal to 360°.
 
     inTurns (degrees 180) == 0.5
-    inTurns (3 * pi) = 1.5
+
+    inTurns (3 * pi) == 1.5
 
 -}
 inTurns : Float -> Float
@@ -262,9 +259,9 @@ uncurry f ( a, b ) =
 
 {-| Defines a lower bound for a variable.
 
-    (-42 |> atLeast 0) == 0
+    (-42 |> atLeast 0) --> 0
 
-    (42 |> atLeast 0) == 42
+    (42 |> atLeast 0) --> 42
 
 -}
 atLeast : comparable -> comparable -> comparable
@@ -274,9 +271,9 @@ atLeast =
 
 {-| Defines an upper bound for a variable.
 
-    (42 |> atMost 0) == 0
+    (42 |> atMost 0) --> 0
 
-    (-42 |> atMost 0) == -42
+    (-42 |> atMost 0) --> -42
 
 -}
 atMost : comparable -> comparable -> comparable
