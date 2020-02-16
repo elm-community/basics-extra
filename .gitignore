@@ -9,3 +9,6 @@ tests/VerifyExamples
 
 # Ignore backup files
 *~
+
+# CI dependency directories
+node_modules/
