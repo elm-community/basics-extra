@@ -2,7 +2,7 @@ module Basics.Extra exposing
     ( swap
     , maxSafeInteger, minSafeInteger, isSafeInteger
     , safeDivide, safeIntegerDivide
-    , safeModBy, safeRemainderBy, fractionalModBy, clampMaximum, clampMinimum
+    , safeModBy, safeRemainderBy, fractionalModBy, atMost, atLeast
     , inDegrees, inRadians, inTurns
     , flip, curry, uncurry
     )
@@ -27,7 +27,7 @@ module Basics.Extra exposing
 
 # Fancier Math
 
-@docs safeModBy, safeRemainderBy, fractionalModBy, clampMaximum, clampMinimum
+@docs safeModBy, safeRemainderBy, fractionalModBy, atMost, atLeast
 
 
 # Angles
@@ -262,23 +262,23 @@ uncurry f ( a, b ) =
 
 {-| Defines a lower bound for a variable.
 
-    (-42 |> clampMinimum 0) == 0
+    (-42 |> atLeast 0) == 0
 
-    (42 |> clampMinimum 0) == 42
+    (42 |> atLeast 0) == 42
 
 -}
-clampMinimum : comparable -> comparable -> comparable
-clampMinimum =
+atLeast : comparable -> comparable -> comparable
+atLeast =
     max
 
 
 {-| Defines an upper bound for a variable.
 
-    (42 |> clampMaximum 0) == 0
+    (42 |> atMost 0) == 0
 
-    (-42 |> clampMaximum 0) == -42
+    (-42 |> atMost 0) == -42
 
 -}
-clampMaximum : comparable -> comparable -> comparable
-clampMaximum =
+atMost : comparable -> comparable -> comparable
+atMost =
     min
