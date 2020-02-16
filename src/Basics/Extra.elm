@@ -259,9 +259,9 @@ uncurry f ( a, b ) =
 
 {-| Defines a lower bound for a variable.
 
-    (-42 |> atLeast 0) --> 0
+    -42 |> atLeast 0 --> 0
 
-    (42 |> atLeast 0) --> 42
+    42 |> atLeast 0 --> 42
 
 -}
 atLeast : comparable -> comparable -> comparable
@@ -271,9 +271,9 @@ atLeast =
 
 {-| Defines an upper bound for a variable.
 
-    (42 |> atMost 0) --> 0
+    42 |> atMost 0 --> 0
 
-    (-42 |> atMost 0) --> -42
+    -42 |> atMost 0 --> -42
 
 -}
 atMost : comparable -> comparable -> comparable
