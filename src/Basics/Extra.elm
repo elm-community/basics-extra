@@ -1,9 +1,8 @@
 module Basics.Extra exposing
     ( swap
     , maxSafeInteger, minSafeInteger, isSafeInteger
-    , atMost, atLeast
     , safeDivide, safeIntegerDivide
-    , safeModBy, safeRemainderBy, fractionalModBy
+    , safeModBy, safeRemainderBy, fractionalModBy, atMost, atLeast
     , inDegrees, inRadians, inTurns
     , flip, curry, uncurry
     )
@@ -23,9 +22,12 @@ module Basics.Extra exposing
 
 # Math
 
-@docs atMost, atLeast
 @docs safeDivide, safeIntegerDivide
-@docs safeModBy, safeRemainderBy, fractionalModBy
+
+
+# Fancier Math
+
+@docs safeModBy, safeRemainderBy, fractionalModBy, atMost, atLeast
 
 
 # Angles
@@ -85,30 +87,6 @@ minSafeInteger =
 isSafeInteger : Int -> Bool
 isSafeInteger number =
     minSafeInteger <= number && maxSafeInteger >= number
-
-
-{-| Defines an upper bound for a variable.
-
-    42 |> atMost 0 --> 0
-
-    -42 |> atMost 0 --> -42
-
--}
-atMost : comparable -> comparable -> comparable
-atMost =
-    min
-
-
-{-| Defines a lower bound for a variable.
-
-    -42 |> atLeast 0 --> 0
-
-    42 |> atLeast 0 --> 42
-
--}
-atLeast : comparable -> comparable -> comparable
-atLeast =
-    max
 
 
 {-| Perform floating-point division (like Elm's `/` operator) that will never
@@ -277,3 +255,27 @@ This combines two arguments into a single pair.
 uncurry : (a -> b -> c) -> ( a, b ) -> c
 uncurry f ( a, b ) =
     f a b
+
+
+{-| Defines a lower bound for a variable.
+
+    (-42 |> atLeast 0) --> 0
+
+    (42 |> atLeast 0) --> 42
+
+-}
+atLeast : comparable -> comparable -> comparable
+atLeast =
+    max
+
+
+{-| Defines an upper bound for a variable.
+
+    (42 |> atMost 0) --> 0
+
+    (-42 |> atMost 0) --> -42
+
+-}
+atMost : comparable -> comparable -> comparable
+atMost =
+    min
