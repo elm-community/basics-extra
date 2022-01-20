@@ -6,6 +6,7 @@ module Basics.Extra exposing
     , safeModBy, safeRemainderBy, fractionalModBy
     , inDegrees, inRadians, inTurns
     , flip, curry, uncurry
+    , doUntil, doWhile, doNTimes
     )
 
 {-| Additional basic functions.
@@ -36,6 +37,11 @@ module Basics.Extra exposing
 # Higher-Order Helpers
 
 @docs flip, curry, uncurry
+
+
+# Iteration
+
+@docs doUntil, doWhile, doNTimes
 
 -}
 
@@ -277,3 +283,55 @@ This combines two arguments into a single pair.
 uncurry : (a -> b -> c) -> ( a, b ) -> c
 uncurry f ( a, b ) =
     f a b
+
+
+{-| Repeatedly apply a function to an argument and return the first `a` for
+which `pred a == True`.
+
+Beware, can cycle infinitely.
+
+    doUntil (\x -> x > 10) (x -> x * 2) 1 == 16
+    doUntil (\x -> x < 10) (x -> x * 2) 1 == 1
+
+-}
+doUntil : (a -> Bool) -> (a -> a) -> a -> a
+doUntil pred f a =
+    if pred a then
+        a
+
+    else
+        doUntil pred f (f a)
+
+
+{-| Repeatedly apply a function to an argument and return the first `a` for
+which `pred a == False`.
+
+Beware, can cycle infinitely.
+
+    doWhile (\x -> x < 10) (x -> x * 2) 1 == 16
+    doWhile (\x -> x > 10) (x -> x * 2) 1 == 1
+
+-}
+doWhile : (a -> Bool) -> (a -> a) -> a -> a
+doWhile pred f a =
+    if pred a then
+        doWhile pred f (f a)
+
+    else
+        a
+
+
+{-| Apply a function to an argument `n` times.
+
+    doNTimes 3 (x -> x + 1) 0 == 3
+    doNTimes 0 (x -> x + 1) 0 == 0
+    doNTimes -3 (x -> x + 1) 0 == 0
+
+-}
+doNTimes : Int -> (a -> a) -> a -> a
+doNTimes n f a =
+    if n > 0 then
+        doNTimes (n - 1) f (f a)
+
+    else
+        a
