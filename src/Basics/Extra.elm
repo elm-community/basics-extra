@@ -287,52 +287,6 @@ This is equivalent to the `ORDER BY` operator in SQL.
 
     ORDER BY columnOne, columnTwo, columnThree
 
-Example usage:
-
-    -- setup
-
-
-
-    type Color
-        = Red
-        | Black
-        | White
-
-    type alias Car =
-        { color : Color
-        , cylinders : Int
-        , maufacturer : String
-        }
-
-    orderCar : Car -> Car -> Order
-    orderCar a b =
-        case ( a, b ) of
-            ( a, a ) ->
-                EQ
-
-            ( Red, _ ) ->
-                LT
-
-            ( Black, _ ) ->
-                GT
-
-            ( White, Red ) ->
-                GT
-
-            ( White, Black ) ->
-                LT
-
-    -- implementation
-
-    cars : List Car
-    cars =
-        [ { color = Red
-          , cylinders = 8
-          , manufacturer = "Ferrari"
-          }
-      ,  { color = Black
-        , cylinders =
-
 -}
 orderBy : List (a -> a -> Order) -> (a -> a -> Order)
 orderBy comparators =

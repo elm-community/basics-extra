@@ -53,10 +53,112 @@ inTurnsDocTests =
         ]
 
 
+type Color
+    = Red
+    | Black
+    | Blue
+
+
+colorToOrder : Color -> Color -> Order
+colorToOrder =
+    toOrder
+        (\c ->
+            case c of
+                Red ->
+                    0
+
+                Black ->
+                    1
+
+                Blue ->
+                    2
+        )
+
+
+type alias Car =
+    { manufacturer : String
+    , model : String
+    , cylinders : Int
+    , color : Color
+    }
+
+
+fordMustangEco : Car
+fordMustangEco =
+    { manufacturer = "Ford"
+    , model = "Mustang EcoBoost"
+    , cylinders = 4
+    , color = Blue
+    }
+
+
+fordMustangShelby : Car
+fordMustangShelby =
+    { manufacturer = "Ford"
+    , model = "Mustang Shelby GT350"
+    , cylinders = 8
+    , color = Red
+    }
+
+
+dodgeViper : Car
+dodgeViper =
+    { manufacturer = "Dodge"
+    , model = "Viper ACR"
+    , cylinders = 10
+    , color = Black
+    }
+
+
+bmw340i : Car
+bmw340i =
+    { manufacturer = "BMW"
+    , model = "340i"
+    , cylinders = 6
+    , color = Blue
+    }
+
+
 orderByTests : Test
 orderByTests =
     describe "orderBy"
-        [ test "this will fail" <| \() -> Expect.fail "todo" ]
+        [ test "order by manufacturer, model" <|
+            \() ->
+                let
+                    unsorted : List Car
+                    unsorted =
+                        [ dodgeViper, fordMustangEco, bmw340i, fordMustangShelby ]
+
+                    sorted =
+                        [ bmw340i, dodgeViper, fordMustangEco, fordMustangShelby ]
+
+                    order : Car -> Car -> Order
+                    order =
+                        orderBy
+                            [ toOrder .manufacturer
+                            , toOrder .model
+                            ]
+                in
+                List.sortWith order unsorted |> Expect.equalLists sorted
+        , test "order by model, manufacturer" <|
+            \() ->
+                let
+                    unsorted : List Car
+                    unsorted =
+                        [ dodgeViper, fordMustangEco, bmw340i, fordMustangShelby ]
+
+                    sorted =
+                        [ bmw340i, fordMustangEco, fordMustangShelby, dodgeViper ]
+
+                    order : Car -> Car -> Order
+                    order =
+                        orderBy
+                            [ toOrder .model
+                            , toOrder .manufacturer
+                            ]
+                in
+                List.sortWith order unsorted |> Expect.equalLists sorted
+        ]
 
 
 type alias ToOrderProduct =
