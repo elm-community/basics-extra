@@ -342,7 +342,9 @@ and returns a function `a -> a -> Order`.
 
 This is primarily a helper function for the `orderBy` function above.
 
-Simple example: wrapping a function that turns a custom type into an instance of `comparable`
+    {- Simple example: wrapping a function that turns
+       a custom type into an instance of `comparable`
+    -}
 
     type Color
         = Red
@@ -358,17 +360,18 @@ Simple example: wrapping a function that turns a custom type into an instance of
 
     colorToOrder : Color -> Color -> Order
     colorToOrder =
-        toOrder lightToComparable
+        toOrder colorToComparable
 
     List.sortWith
         colorToOrder
         [ Yellow, Yellow, Red, Green, Red ]
     --> [ Red, Red, Yellow, Yellow, Green ]
 
-Note that `List.sortWith colorOrder` above is identical to `List.sortBy colorToComparable`.
 
-More interesting example: using the property accessor methods on a custom type with `toOrder`;
-we only really need this function when we want to combine multiple ordering functions into one.
+    {- More interesting example: using the property accessor
+       methods on a custom type with `toOrder`; we only need
+       this function when we want to combine multiple ordering functions into one.
+    -}
 
     type alias Light =
         { color : Color
@@ -394,6 +397,8 @@ we only really need this function when we want to combine multiple ordering func
     --> , Light Red "Stop" 60
     --> , Light Green "Go" 60
     --> ]
+
+(Note that `List.sortWith colorOrder` above is identical to `List.sortBy colorToComparable`.)
 
 -}
 toOrder : (a -> comparable) -> (a -> a -> Order)
