@@ -2,6 +2,7 @@
   "name": "basics-extra",
   "version": "4.1.0",
   "scripts": {
+    "preview": "elm-doc-preview",
     "test": "elm-test && elm-verify-examples --run-tests && elm-format --validate ."
   },
   "repository": {
@@ -11,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "elm": "^0.19.1-5",
+    "elm-doc-preview": "^5.0.5",
     "elm-format": "^0.8.5",
     "elm-test": "^0.19.1-revision9",
     "elm-verify-examples": "^5.0.0"

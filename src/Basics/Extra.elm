@@ -38,6 +38,11 @@ module Basics.Extra exposing
 
 @docs flip, curry, uncurry
 
+
+# Comparison & Ordering
+
+@docs orderBy, toOrder
+
 -}
 
 
@@ -281,11 +286,30 @@ uncurry f ( a, b ) =
 
 
 {-| Create an ordering function that can be used to sort
-lists by multiple dimensions.
+lists by multiple dimensions, by flattening multiple ordering functions into one.
 
 This is equivalent to the `ORDER BY` operator in SQL.
 
-    ORDER BY columnOne, columnTwo, columnThree
+    type alias Pen =
+        { model : String
+        , tipWidthInMillimeters : Float
+        }
+
+    pens : List Pen
+    pens =
+        [ Pen "Pilot Hi-Tec C" 0.4
+        , Pen "Morning Glory Pro Mach" 0.38
+        ]
+
+    order : Pen -> Pen -> Order
+    order =
+        orderBy [ toOrder .tipWidthInMillimeters, toOrder .model ]
+
+    List.sortWith order pens
+
+    --> [ Pen "Morning Glory Pro Mach", 0.38
+    --> , Pen "Pilot Hi-Tec C", 0.4
+    --> ]
 
 -}
 orderBy : List (a -> a -> Order) -> (a -> a -> Order)
