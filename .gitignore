@@ -15,3 +15,7 @@ node_modules/
 
 # IntelliJ files
 .idea/
+
+# misc
+.DS_Store
+package-lock.json
