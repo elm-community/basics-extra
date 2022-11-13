@@ -59,20 +59,18 @@ type Color
     | Blue
 
 
-colorToOrder : Color -> Color -> Order
-colorToOrder =
-    toOrder
-        (\c ->
-            case c of
-                Red ->
-                    0
+colorToComparable : Color -> Int
+colorToComparable =
+    \c ->
+        case c of
+            Red ->
+                0
 
-                Black ->
-                    1
+            Black ->
+                1
 
-                Blue ->
-                    2
-        )
+            Blue ->
+                2
 
 
 type alias Car =
@@ -155,6 +153,23 @@ orderByTests =
                         orderBy
                             [ toOrder .model
                             , toOrder .manufacturer
+                            ]
+                in
+                List.sortWith order unsorted |> Expect.equalLists sorted
+        , test "order by color, cylinders, manufacturer, model" <|
+            \() ->
+                let
+                    unsorted : List Car
+                    unsorted =
+                        [ dodgeViper, fordMustangEco, bmw340i, fordMustangShelby ]
+
+                    sorted =
+                        [ fordMustangShelby, dodgeViper, fordMustangEco, bmw340i ]
+
+                    order : Car -> Car -> Order
+                    order =
+                        orderBy
+                            [ .color >> colorToComparable |> toOrder
                             ]
                 in
                 List.sortWith order unsorted |> Expect.equalLists sorted
