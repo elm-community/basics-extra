@@ -2,6 +2,7 @@ module Tests exposing (suite)
 
 import Basics.Extra exposing (fractionalModBy, inRadians, inTurns, orderBy, toOrder)
 import Expect exposing (Expectation, FloatingPointTolerance(..))
+import List.Extra as ListX
 import Test exposing (Test, describe, test)
 
 
@@ -117,16 +118,27 @@ bmw340i =
     }
 
 
+carPermutations : List (List Car)
+carPermutations =
+    ListX.permutations
+        [ dodgeViper, fordMustangEco, bmw340i, fordMustangShelby ]
+
+
 orderByTests : Test
 orderByTests =
+    let
+        expectations : (Car -> Car -> Order) -> List (List Car -> Expectation)
+        expectations order =
+            List.map
+                (\p ->
+                    List.sortWith order p |> Expect.equalLists
+                )
+                carPermutations
+    in
     describe "orderBy"
         [ test "order by manufacturer, model" <|
             \() ->
                 let
-                    unsorted : List Car
-                    unsorted =
-                        [ dodgeViper, fordMustangEco, bmw340i, fordMustangShelby ]
-
                     sorted =
                         [ bmw340i, dodgeViper, fordMustangEco, fordMustangShelby ]
 
@@ -137,14 +149,10 @@ orderByTests =
                             , toOrder .model
                             ]
                 in
-                List.sortWith order unsorted |> Expect.equalLists sorted
+                Expect.all (expectations order) sorted
         , test "order by model, manufacturer" <|
             \() ->
                 let
-                    unsorted : List Car
-                    unsorted =
-                        [ dodgeViper, fordMustangEco, bmw340i, fordMustangShelby ]
-
                     sorted =
                         [ bmw340i, fordMustangEco, fordMustangShelby, dodgeViper ]
 
@@ -155,14 +163,10 @@ orderByTests =
                             , toOrder .manufacturer
                             ]
                 in
-                List.sortWith order unsorted |> Expect.equalLists sorted
+                Expect.all (expectations order) sorted
         , test "order by color, cylinders, manufacturer, model" <|
             \() ->
                 let
-                    unsorted : List Car
-                    unsorted =
-                        [ dodgeViper, fordMustangEco, bmw340i, fordMustangShelby ]
-
                     sorted =
                         [ fordMustangShelby, dodgeViper, fordMustangEco, bmw340i ]
 
@@ -170,9 +174,12 @@ orderByTests =
                     order =
                         orderBy
                             [ .color >> colorToComparable |> toOrder
+                            , toOrder .cylinders
+                            , toOrder .manufacturer
+                            , toOrder .model
                             ]
                 in
-                List.sortWith order unsorted |> Expect.equalLists sorted
+                Expect.all (expectations order) sorted
         ]
 
 
