@@ -288,7 +288,7 @@ uncurry f ( a, b ) =
 {-| Create an ordering function that can be used to sort
 lists by multiple dimensions, by flattening multiple ordering functions into one.
 
-This is equivalent to the `ORDER BY` operator in SQL. The ordering function will order
+This is equivalent to `ORDER BY` in SQL. The ordering function will order
 its inputs based on the order that they appear in the `List (a -> a -> Order)` argument.
 
     type alias Pen =
@@ -308,11 +308,15 @@ its inputs based on the order that they appear in the `List (a -> a -> Order)` a
         orderBy [ toOrder .tipWidthInMillimeters, toOrder .model ]
 
     List.sortWith order pens
-
     --> [ Pen "Morning Glory Pro Mach" 0.38
     --> , Pen "Pilot Hi-Tec-C Gel" 0.4
     --> , Pen "Pilot Hi-Tec-C Coleto" 0.5
     --> ]
+
+If our `Pen` type alias above was represented a row in a database table, our `order` function as defined above would be equivalent
+to this SQL clause:
+
+    ORDER BY tipWidthInMillimeters, model
 
 -}
 orderBy : List (a -> a -> Order) -> (a -> a -> Order)
