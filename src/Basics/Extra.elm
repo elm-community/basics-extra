@@ -288,7 +288,8 @@ uncurry f ( a, b ) =
 {-| Create an ordering function that can be used to sort
 lists by multiple dimensions, by flattening multiple ordering functions into one.
 
-This is equivalent to the `ORDER BY` operator in SQL.
+This is equivalent to the `ORDER BY` operator in SQL. The ordering function will order
+its inputs based on the order that they appear in the `List (a -> a -> Order)` argument.
 
     type alias Pen =
         { model : String
@@ -297,8 +298,9 @@ This is equivalent to the `ORDER BY` operator in SQL.
 
     pens : List Pen
     pens =
-        [ Pen "Pilot Hi-Tec C" 0.4
+        [ Pen "Pilot Hi-Tec-C Gel" 0.4
         , Pen "Morning Glory Pro Mach" 0.38
+        , Pen "Pilot Hi-Tec-C Coleto" 0.5
         ]
 
     order : Pen -> Pen -> Order
@@ -307,8 +309,9 @@ This is equivalent to the `ORDER BY` operator in SQL.
 
     List.sortWith order pens
 
-    --> [ Pen "Morning Glory Pro Mach", 0.38
-    --> , Pen "Pilot Hi-Tec C", 0.4
+    --> [ Pen "Morning Glory Pro Mach" 0.38
+    --> , Pen "Pilot Hi-Tec-C Gel" 0.4
+    --> , Pen "Pilot Hi-Tec-C Coleto" 0.5
     --> ]
 
 -}
@@ -329,6 +332,65 @@ orderBy comparators =
 
 
 {-| Helper for multi-dimensional sort.
+
+Takes a function that extracts a comparable value from a type `a` as a key,
+and returns a function `a -> a -> Order`.
+
+This is primarily a helper function for the `orderBy` function above.
+
+Simple example: wrapping a function that turns a custom type into an instance of `comparable`
+
+    type Color
+        = Red
+        | Yellow
+        | Green
+
+    colorToComparable : Color -> Int
+    colorToComparable light =
+        case light of
+            Red -> 0
+            Yellow -> 1
+            Green -> 2
+
+    colorToOrder : Color -> Color -> Order
+    colorToOrder =
+        toOrder lightToComparable
+
+    List.sortWith
+        colorToOrder
+        [ Yellow, Yellow, Red, Green, Red ]
+    --> [ Red, Red, Yellow, Yellow, Green ]
+
+Note that `List.sortWith colorOrder` above is identical to `List.sortBy colorToComparable`.
+
+More interesting example: using the property accessor methods on a custom type with `toOrder`;
+we only really need this function when we want to combine multiple ordering functions into one.
+
+    type alias Light =
+        { color : Color
+        , action : String
+        , timeActivatedSeconds : Float
+        }
+
+    lights : List Light
+    lights =
+        [ Light Green "Go" 60
+        , Light Yellow "Slow down" 5.5
+        , Light Red "Stop" 60
+        ]
+
+    List.sortWith
+        ( orderBy
+            [ toOrder .timeActivatedSeconds
+            , toOrder (.color >> colorToOrder)
+            ]
+        )
+        lights
+    --> [ Light Yellow "Slow down" 5.5
+    --> , Light Red "Stop" 60
+    --> , Light Green "Go" 60
+    --> ]
+
 -}
 toOrder : (a -> comparable) -> (a -> a -> Order)
 toOrder selector =
