@@ -7,6 +7,7 @@ module Basics.Extra exposing
     , inDegrees, inRadians, inTurns
     , flip, curry, uncurry
     , orderBy, toOrder
+    , toOrderDesc
     )
 
 {-| Additional basic functions.
@@ -405,3 +406,41 @@ toOrder : (a -> comparable) -> (a -> a -> Order)
 toOrder selector =
     \a b ->
         Basics.compare (selector a) (selector b)
+
+
+{-| Same as `toOrder`, with flipped comparisons to enable "sort by descending".
+
+    type Color
+        = Red
+        | Yellow
+        | Green
+
+    colorToComparable : Color -> Int
+    colorToComparable light =
+        case light of
+            Red -> 0
+            Yellow -> 1
+            Green -> 2
+
+    colorToOrder : Color -> Color -> Order
+    colorToOrder =
+        toOrderDesc colorToComparable
+
+    List.sortWith
+        colorToOrder
+        [ Yellow, Yellow, Red, Green, Red ]
+    --> [ Green, Yellow, Yellow, Red, Red ]
+
+-}
+toOrderDesc : (a -> comparable) -> (a -> a -> Order)
+toOrderDesc selector =
+    \a b ->
+        case Basics.compare (selector a) (selector b) of
+            LT ->
+                GT
+
+            EQ ->
+                EQ
+
+            GT ->
+                LT
