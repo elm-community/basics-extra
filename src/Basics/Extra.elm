@@ -6,8 +6,7 @@ module Basics.Extra exposing
     , safeModBy, safeRemainderBy, fractionalModBy
     , inDegrees, inRadians, inTurns
     , flip, curry, uncurry
-    , orderBy, toOrder
-    , toOrderDesc
+    , orderBy, toOrder, toOrderDesc
     )
 
 {-| Additional basic functions.
@@ -42,7 +41,7 @@ module Basics.Extra exposing
 
 # Comparison & Ordering
 
-@docs orderBy, toOrder
+@docs orderBy, toOrder, toOrderDesc
 
 -}
 
@@ -323,17 +322,17 @@ to this SQL clause:
 orderBy : List (a -> a -> Order) -> (a -> a -> Order)
 orderBy comparators =
     \a b ->
-        let
-            step : (a -> a -> Order) -> Order -> Order
-            step comparator acc =
-                case acc of
-                    EQ ->
-                        comparator a b
+        case comparators of
+            [] ->
+                EQ
 
-                    _ ->
-                        acc
-        in
-        List.foldl step EQ comparators
+            comparator :: rest ->
+                case comparator a b of
+                    EQ ->
+                        orderBy rest a b
+
+                    other ->
+                        other
 
 
 {-| Helper for multi-dimensional sort.
