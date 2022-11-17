@@ -16,5 +16,8 @@ node_modules/
 # IntelliJ files
 .idea/
 
+# elm-coverage reports
+.coverage/
+
 # misc
 .DS_Store

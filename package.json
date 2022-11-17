@@ -2,6 +2,7 @@
   "name": "basics-extra",
   "version": "4.1.0",
   "scripts": {
+    "coverage": "elm-coverage",
     "preview": "elm-doc-preview",
     "test": "elm-test && elm-verify-examples --run-tests && elm-format --validate ."
   },
@@ -15,6 +16,7 @@
     "elm-test": "^0.19.1-revision10"
   },
   "devDependencies": {
+    "elm-coverage": "^0.4.1",
     "elm-doc-preview": "^5.0.5",
     "elm-format": "^0.8.5",
     "elm-verify-examples": "^5.0.0"

@@ -180,6 +180,20 @@ orderByTests =
                             ]
                 in
                 Expect.all (expectations order) sorted
+        , test "orderBy with an empty list should preserve the original ordering of the list" <|
+            \() ->
+                let
+                    thunkedExpectations : List (() -> Expectation)
+                    thunkedExpectations =
+                        List.map
+                            (\p ->
+                                \() ->
+                                    List.sortWith (orderBy []) p
+                                        |> Expect.equalLists p
+                            )
+                            carPermutations
+                in
+                Expect.all thunkedExpectations ()
         ]
 
 
