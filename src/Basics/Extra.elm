@@ -320,19 +320,18 @@ to this SQL clause:
 
 -}
 orderBy : List (a -> a -> Order) -> (a -> a -> Order)
-orderBy comparators =
-    \a b ->
-        case comparators of
-            [] ->
-                EQ
+orderBy comparators a b =
+    case comparators of
+        [] ->
+            EQ
 
-            comparator :: rest ->
-                case comparator a b of
-                    EQ ->
-                        orderBy rest a b
+        comparator :: rest ->
+            case comparator a b of
+                EQ ->
+                    orderBy rest a b
 
-                    other ->
-                        other
+                other ->
+                    other
 
 
 {-| Helper for multi-dimensional sort.
