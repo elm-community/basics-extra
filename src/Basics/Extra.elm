@@ -432,7 +432,8 @@ toOrder selector a b =
 
 -}
 toOrderDesc : (a -> comparable) -> (a -> a -> Order)
-toOrderDesc selector =
+toOrderDesc selector a b =
+    Basics.compare (selector b) (selector a)
     \a b ->
         case Basics.compare (selector a) (selector b) of
             LT ->
