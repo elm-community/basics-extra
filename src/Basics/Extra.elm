@@ -401,7 +401,8 @@ This is primarily a helper function for the `orderBy` function above.
 
 -}
 toOrder : (a -> comparable) -> (a -> a -> Order)
-toOrder selector =
+toOrder selector a b =
+    Basics.compare (selector a) (selector b)
     \a b ->
         Basics.compare (selector a) (selector b)
 
