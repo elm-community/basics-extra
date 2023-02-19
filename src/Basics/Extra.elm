@@ -388,7 +388,7 @@ This is primarily a helper function for the `orderBy` function above.
     List.sortWith
         ( orderBy
             [ toOrder .timeActivatedSeconds
-            , toOrder (.color >> colorToOrder)
+            , toOrder (.color >> colorToComparable)
             ]
         )
         lights
