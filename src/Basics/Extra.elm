@@ -403,8 +403,6 @@ This is primarily a helper function for the `orderBy` function above.
 toOrder : (a -> comparable) -> (a -> a -> Order)
 toOrder selector a b =
     Basics.compare (selector a) (selector b)
-    \a b ->
-        Basics.compare (selector a) (selector b)
 
 
 {-| Same as `toOrder`, with flipped comparisons to enable "sort by descending".
@@ -434,13 +432,3 @@ toOrder selector a b =
 toOrderDesc : (a -> comparable) -> (a -> a -> Order)
 toOrderDesc selector a b =
     Basics.compare (selector b) (selector a)
-    \a b ->
-        case Basics.compare (selector a) (selector b) of
-            LT ->
-                GT
-
-            EQ ->
-                EQ
-
-            GT ->
-                LT
