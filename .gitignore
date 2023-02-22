@@ -12,3 +12,12 @@ tests/VerifyExamples
 
 # CI dependency directories
 node_modules/
+
+# IntelliJ files
+.idea/
+
+# elm-coverage reports
+.coverage/
+
+# misc
+.DS_Store

@@ -6,6 +6,7 @@ module Basics.Extra exposing
     , safeModBy, safeRemainderBy, fractionalModBy
     , inDegrees, inRadians, inTurns
     , flip, curry, uncurry
+    , orderBy, toOrder, toOrderDesc
     )
 
 {-| Additional basic functions.
@@ -36,6 +37,11 @@ module Basics.Extra exposing
 # Higher-Order Helpers
 
 @docs flip, curry, uncurry
+
+
+# Comparison & Ordering
+
+@docs orderBy, toOrder, toOrderDesc
 
 -}
 
@@ -277,3 +283,152 @@ This combines two arguments into a single pair.
 uncurry : (a -> b -> c) -> ( a, b ) -> c
 uncurry f ( a, b ) =
     f a b
+
+
+{-| Create an ordering function that can be used to sort
+lists by multiple dimensions, by flattening multiple ordering functions into one.
+
+This is equivalent to `ORDER BY` in SQL. The ordering function will order
+its inputs based on the order that they appear in the `List (a -> a -> Order)` argument.
+
+    type alias Pen =
+        { model : String
+        , tipWidthInMillimeters : Float
+        }
+
+    pens : List Pen
+    pens =
+        [ Pen "Pilot Hi-Tec-C Gel" 0.4
+        , Pen "Morning Glory Pro Mach" 0.38
+        , Pen "Pilot Hi-Tec-C Coleto" 0.5
+        ]
+
+    order : Pen -> Pen -> Order
+    order =
+        orderBy [ toOrder .tipWidthInMillimeters, toOrder .model ]
+
+    List.sortWith order pens
+    --> [ Pen "Morning Glory Pro Mach" 0.38
+    --> , Pen "Pilot Hi-Tec-C Gel" 0.4
+    --> , Pen "Pilot Hi-Tec-C Coleto" 0.5
+    --> ]
+
+If our `Pen` type alias above was represented a row in a database table, our `order` function as defined above would be equivalent
+to this SQL clause:
+
+    ORDER BY tipWidthInMillimeters, model
+
+-}
+orderBy : List (a -> a -> Order) -> (a -> a -> Order)
+orderBy comparators a b =
+    case comparators of
+        [] ->
+            EQ
+
+        comparator :: rest ->
+            case comparator a b of
+                EQ ->
+                    orderBy rest a b
+
+                other ->
+                    other
+
+
+{-| Helper for multi-dimensional sort.
+
+Takes a function that extracts a comparable value from a type `a` as a key,
+and returns a function `a -> a -> Order`.
+
+This is primarily a helper function for the `orderBy` function above.
+
+    {- Simple example: wrapping a function that turns
+       a custom type into an instance of `comparable`
+    -}
+
+    type Color
+        = Red
+        | Yellow
+        | Green
+
+    colorToComparable : Color -> Int
+    colorToComparable light =
+        case light of
+            Red -> 0
+            Yellow -> 1
+            Green -> 2
+
+    colorToOrder : Color -> Color -> Order
+    colorToOrder =
+        toOrder colorToComparable
+
+    List.sortWith
+        colorToOrder
+        [ Yellow, Yellow, Red, Green, Red ]
+    --> [ Red, Red, Yellow, Yellow, Green ]
+
+
+    {- More interesting example: using the property accessor
+       methods on a custom type with `toOrder`; we only need
+       this function when we want to combine multiple ordering functions into one.
+    -}
+
+    type alias Light =
+        { color : Color
+        , action : String
+        , timeActivatedSeconds : Float
+        }
+
+    lights : List Light
+    lights =
+        [ Light Green "Go" 60
+        , Light Yellow "Slow down" 5.5
+        , Light Red "Stop" 60
+        ]
+
+    List.sortWith
+        ( orderBy
+            [ toOrder .timeActivatedSeconds
+            , toOrder (.color >> colorToComparable)
+            ]
+        )
+        lights
+    --> [ Light Yellow "Slow down" 5.5
+    --> , Light Red "Stop" 60
+    --> , Light Green "Go" 60
+    --> ]
+
+(Note that `List.sortWith colorOrder` above is identical to `List.sortBy colorToComparable`.)
+
+-}
+toOrder : (a -> comparable) -> (a -> a -> Order)
+toOrder selector a b =
+    Basics.compare (selector a) (selector b)
+
+
+{-| Same as `toOrder`, with flipped comparisons to enable "sort by descending".
+
+    type Color
+        = Red
+        | Yellow
+        | Green
+
+    colorToComparable : Color -> Int
+    colorToComparable light =
+        case light of
+            Red -> 0
+            Yellow -> 1
+            Green -> 2
+
+    colorToOrder : Color -> Color -> Order
+    colorToOrder =
+        toOrderDesc colorToComparable
+
+    List.sortWith
+        colorToOrder
+        [ Yellow, Yellow, Red, Green, Red ]
+    --> [ Green, Yellow, Yellow, Red, Red ]
+
+-}
+toOrderDesc : (a -> comparable) -> (a -> a -> Order)
+toOrderDesc selector a b =
+    Basics.compare (selector b) (selector a)
