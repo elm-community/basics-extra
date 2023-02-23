@@ -3,7 +3,7 @@
     "name": "elm-community/basics-extra",
     "summary": "Additional basic functions",
     "license": "MIT",
-    "version": "4.1.0",
+    "version": "4.2.0",
     "exposed-modules": [
         "Basics.Extra"
     ],
@@ -12,7 +12,7 @@
         "elm/core": "1.0.0 <= v < 2.0.0"
     },
     "test-dependencies": {
-        "elm-explorations/test": "2.0.1 <= v < 3.0.0",
-        "elm-community/list-extra": "8.7.0 <= v < 9.0.0"
+        "elm-community/list-extra": "8.7.0 <= v < 9.0.0",
+        "elm-explorations/test": "2.0.1 <= v < 3.0.0"
     }
 }
